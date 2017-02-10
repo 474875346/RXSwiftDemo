@@ -7,19 +7,32 @@
 //
 
 import UIKit
-
+import RxSwift
 class ViewController: UIViewController {
-
+    let viewModel = ViewModel()
+    let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.view.backgroundColor = UIColor.red
+        viewModel.getCategories()
+            .subscribe({  event in
+                switch event {
+                case .next(let models):
+                    print(models.toJSON())
+                case .error(let error):
+                    print(error.localizedDescription)
+                case .completed:
+                    return
+                }
+            }).addDisposableTo(disposeBag)
+        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
 
